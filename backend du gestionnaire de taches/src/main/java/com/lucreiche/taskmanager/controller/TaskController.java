@@ -6,41 +6,49 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController // crée une API REST
-@RequestMapping("/tasks") // URL de base pour les endpoints
+@CrossOrigin(origins = "http://localhost:5173")
+@RestController
+@RequestMapping("/tasks")
 
 public class TaskController {
 
-    // Déclaration du service(accès à la logique metier)
-    // final = ne peut être assigné qu'une seule fois (bonne pratique)
+    // Injection du service
     private final TaskService taskService;
 
+    // Constructeur
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
-    /*@GetMapping
+
+    // Récupérer toutes les tâches
+    @GetMapping
     public List<Task> getTasks() {
         return taskService.getAllTasks();
-    }*/
+    }
 
-    @GetMapping
+    // Récupérer une tâche par son ID
+    @GetMapping("/{id}")
     public Task getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id);
     }
+
+    // Créer une nouvelle tâche
     @PostMapping
-    public Task createTask(Task task) {
+    public Task createTask(@RequestBody Task task) {
         return taskService.createTask(task);
     }
 
     // Modifier une tâche
     @PutMapping("/{id}")
-    public Task update(@PathVariable Long id, @RequestBody Task task) {
-        return taskService.updateTask(id, task);
+    public Task updateTask(@PathVariable Long id,
+                           @RequestBody Task updatedTask) {
+
+        return taskService.updateTask(id, updatedTask);
     }
 
     // Supprimer une tâche
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
     }
 }
